@@ -23,13 +23,15 @@ public class GamePanel extends JPanel implements ActionListener {
 
     final int x[] = new int[GAME_UNITS];
     final int y[] = new int[GAME_UNITS];
+
+   
     int bodyParts = 3;
-    int applesEaten;
+    static int applesEaten;
     int appleX;
     int appleY;
     char direction = 'R';
     boolean running = false;
-    Timer timer;
+    static Timer timer;
     Random random;
     private Image apple;
     static Color gameBGColor;
@@ -59,6 +61,7 @@ public class GamePanel extends JPanel implements ActionListener {
     public void draw(Graphics g) {
 
         Graphics2D g2d = (Graphics2D) g;
+        
 
         if (running) {
             g2d.setColor(Color.red);
@@ -83,6 +86,13 @@ public class GamePanel extends JPanel implements ActionListener {
 
             g2d.drawString("Score: " + applesEaten, (SCREEN_WIDTH - metrics.stringWidth("Score: " + applesEaten)) / 2,
                     g2d.getFont().getSize());
+
+
+            // g3d.setFont(new Font("OCR A Extended", Font.BOLD, 10));
+            // FontMetrics pwesto = getFontMetrics(g3d.getFont());
+            //  g3d.drawString("Press 'P' to pause and 'R' to Resume" , 20,  g3d.getFont().getSize());
+
+
         } else {
             gameOver(g2d);
         }
@@ -179,9 +189,26 @@ public class GamePanel extends JPanel implements ActionListener {
         // Go to try again frame
         new TryAgain();
     }
+     
+
+     public void keyPressed(KeyEvent e) {
+            
+            int key = e.getKeyCode();
+
+                if (key == 'p' || key == 'P') {
+                    running = true;
+                    System.exit(0);
+                }
+     }
+
+
+
+
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        
 
         if (running) {
             move();
@@ -189,11 +216,17 @@ public class GamePanel extends JPanel implements ActionListener {
             checkCollisions();
         }
         repaint();
+
+       
+                    if (direction == 'p' && direction == 'P'){
+                         new PauseMenu();
+                    }
     }
 
     public class MyKeyAdapter extends KeyAdapter {
         @Override
         public void keyPressed(KeyEvent e) {
+            int key = e.getKeyCode();
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_LEFT:
                     if (direction != 'R') {
@@ -214,8 +247,15 @@ public class GamePanel extends JPanel implements ActionListener {
                     if (direction != 'U') {
                         direction = 'D';
                     }
-                    break;
+                case KeyEvent.VK_P:
+                    if (key == 'p' || key == 'P') {
+                       timer.stop();
+                    new PauseMenu();
+                      }
+
+                    
+                    }
+                    
             }
         }
     }
-}
